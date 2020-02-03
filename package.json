@@ -1,0 +1,17 @@
+{
+  "name": "Discord_League_Bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "clear": "^0.1.0",
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.2.0"
+  }
+}
