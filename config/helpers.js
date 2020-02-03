@@ -10,6 +10,7 @@ const {
   BOT_ID,
   WAITING_LOBBY_VOICE_CHANNEL_ID,
   ADMIN_USER_ID,
+  SERVER_ID,
 } = require("./config")
 
 exports.userInQueue = (queue, userId) => {
@@ -52,13 +53,14 @@ exports.commands = [
 ]
 
 exports.verifyEnv = () => {
-  if ( !MAJOR_LEAGUE_ROLE_ID || !MAJOR_LEAGUE_TEXT_CHANNEL_ID || 
+  if ( !SERVER_ID || !MAJOR_LEAGUE_ROLE_ID || !MAJOR_LEAGUE_TEXT_CHANNEL_ID || 
     !ALTERNATIVE_LEAGUE_ROLE_ID || !ALTERNATIVE_LEAGUE_TEXT_CHANNEL_ID || 
     !MAJOR_LEAGUE_VOICE_CHANNEL_ID || !ALTERNATIVE_LEAGUE_VOICE_CHANNEL_ID ||
     !WELCOME_TEXT_CHANNEL_ID || !SELECT_ROLE_CHANNEL_ID ||
     !BOT_ID || !WAITING_LOBBY_VOICE_CHANNEL_ID ||
     !ADMIN_USER_ID ) {
  
+    if (!SERVER_ID) console.log("SERVER_ID is not defined. Please verify .env variables.")
     if (!MAJOR_LEAGUE_ROLE_ID) console.log("MAJOR_LEAGUE_ROLE_ID is not defined. Please verify .env variables.")
     if (!MAJOR_LEAGUE_TEXT_CHANNEL_ID) console.log("MAJOR_LEAGUE_TEXT_CHANNEL_ID is not defined. Please verify .env variables.")
     if (!ALTERNATIVE_LEAGUE_ROLE_ID) console.log("ALTERNATIVE_LEAGUE_ROLE_IDis not defined. Please verify .env variables.")
@@ -77,39 +79,54 @@ exports.verifyEnv = () => {
 
 exports.verifyChannels = async (client) => {
   let error = false
-  if (!client.channels.find(ch => ch.id === MAJOR_LEAGUE_TEXT_CHANNEL_ID)) {
-    console.log("Couldn't connect to Major League Text Channel.")
+  const server = client.guilds.find(g => g.id === SERVER_ID)
+  if (!server) {
+    console.log("Couldn't connect to Server. (SERVER_ID)")
     error = true
   }
-  if (!client.channels.find(ch => ch.id === ALTERNATIVE_LEAGUE_TEXT_CHANNEL_ID)) {
-    console.log("Couldn't connect to Alternative League Text Channel.")
+  if (!server.channels.find(ch => ch.id === MAJOR_LEAGUE_TEXT_CHANNEL_ID)) {
+    console.log("Couldn't connect to Major League Text Channel. (MAJOR_LEAGUE_TEXT_CHANNEL_ID)")
     error = true
   }
-  if (!client.channels.find(ch => ch.id === MAJOR_LEAGUE_VOICE_CHANNEL_ID)) {
-    console.log("Couldn't connect to Major League Voice Channel.")
+  if (!server.channels.find(ch => ch.id === ALTERNATIVE_LEAGUE_TEXT_CHANNEL_ID)) {
+    console.log("Couldn't connect to Alternative League Text Channel. (ALTERNATIVE_LEAGUE_TEXT_CHANNEL_ID)")
     error = true
   }
-  if (!client.channels.find(ch => ch.id === ALTERNATIVE_LEAGUE_VOICE_CHANNEL_ID)) {
-    console.log("Couldn't connect to Alternative League Voice Channel.")
+  if (!server.channels.find(ch => ch.id === MAJOR_LEAGUE_VOICE_CHANNEL_ID)) {
+    console.log("Couldn't connect to Major League Voice Channel. (MAJOR_LEAGUE_VOICE_CHANNEL_ID)")
     error = true
   }
-  if (!client.channels.find(ch => ch.id === WELCOME_TEXT_CHANNEL_ID)) {
-    console.log("Couldn't connect to Welcome Text Channel.")
+  if (!server.channels.find(ch => ch.id === ALTERNATIVE_LEAGUE_VOICE_CHANNEL_ID)) {
+    console.log("Couldn't connect to Alternative League Voice Channel. (ALTERNATIVE_LEAGUE_VOICE_CHANNEL_ID)")
+    error = true
+  }
+  if (!server.channels.find(ch => ch.id === WELCOME_TEXT_CHANNEL_ID)) {
+    console.log("Couldn't connect to Welcome Text Channel. (WELCOME_TEXT_CHANNEL_ID)")
     error = true
   }
   
-  if (!client.channels.find(ch => ch.id === SELECT_ROLE_CHANNEL_ID)) {
-    console.log("Couldn't connect to Select Role Text Channel.")
+  if (!server.channels.find(ch => ch.id === SELECT_ROLE_CHANNEL_ID)) {
+    console.log("Couldn't connect to Select Role Text Channel. (SELECT_ROLE_CHANNEL_ID)")
     error = true
   }
   
-  if (!client.channels.find(ch => ch.id === WAITING_LOBBY_VOICE_CHANNEL_ID)) {
-    console.log("Couldn't connect to Waiting Lobby Voice Channel.")
+  if (!server.channels.find(ch => ch.id === WAITING_LOBBY_VOICE_CHANNEL_ID)) {
+    console.log("Couldn't connect to Waiting Lobby Voice Channel. (WAITING_LOBBY_VOICE_CHANNEL_ID)")
+    error = true
+  }
+
+  if (!server.roles.find(ch => ch.id === MAJOR_LEAGUE_ROLE_ID)) {
+    console.log("Couldn't find Major League Role. (MAJOR_LEAGUE_ROLE_ID)")
+    error = true
+  }
+  
+  if (!server.roles.find(ch => ch.id === ALTERNATIVE_LEAGUE_ROLE_ID)) {
+    console.log("Couldn't find Alternative League Role. (ALTERNATIVE_LEAGUE_ROLE_ID)")
     error = true
   }
 
   if (error) {
-    console.log("Is the ID correct?")
+    console.log("Check those IDs!")
     process.exit(1)
   }
 }
